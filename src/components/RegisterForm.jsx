@@ -7,6 +7,8 @@ import { PiUserLight } from "react-icons/pi";
 
 import { useForm } from "react-hook-form";
 
+import { PostData } from '../api/auth';
+
 export default function RegisterForm() {
  
 	
@@ -21,15 +23,17 @@ export default function RegisterForm() {
 
 
 	const onSubmit = (data) => {
+		const url = 'http://localhost:3000/api/auth/register';
+		PostData(url, data);
 		console.log(data);
+		
     };
 
-
-	const onSubmitHandler = (e) => {
-        e.preventDefault();
-        handleSubmit(onSubmit)();
-
-    };
+	const onSubmitHandler = async (e) => {
+		e.preventDefault();
+		 handleSubmit(onSubmit)();
+		
+	};
 
 	
 	return (    

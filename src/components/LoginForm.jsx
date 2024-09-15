@@ -5,8 +5,14 @@ import { MdAlternateEmail } from "react-icons/md";
 import { MdOutlinePassword } from "react-icons/md";
 
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+
+import { PostData } from '../api/auth';
 
 export default function LoginForm() {
+
+	const [error, setError] = useState(null);
+	
 
 	
 	const {
@@ -18,15 +24,20 @@ export default function LoginForm() {
 	  });
 
 
-	const onSubmit = (data) => {
-		console.log(data);
+	const onSubmit = async (data) => {
+		const url = 'http://localhost:3000/api/auth/login';
+		const resp = await PostData(url, data);
+		if (resp.error) {
+			setError(resp.error)
+		}else{
+			console.log("data else ==>",data)
+		}
     };
 
 
 	const onSubmitHandler = (e) => {
         e.preventDefault();
         handleSubmit(onSubmit)();
-
   
     };
 
@@ -63,6 +74,7 @@ export default function LoginForm() {
 			placeholder="Password" />
 		</div>
 		{errors.password && <p className="text-red-500">{errors.password.message}</p>} 
+		{error && <p className="text-red-500">{error}</p>} 
 		<input type="submit" value="Login" className="btn solid" />
 		<p className="social-text">Or Sign in with social platforms</p>
 		<div className="social-media">
