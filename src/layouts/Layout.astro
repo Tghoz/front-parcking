@@ -19,7 +19,7 @@ const { title } = Astro.props;
 		<title>{title}</title>
 		<ViewTransitions />
 	</head>
-	<body>
+	<body class="">
 		<slot />
 	</body>
 </html>
@@ -41,7 +41,7 @@ const { title } = Astro.props;
 	}
 	html {
 		font-family: system-ui, sans-serif;
-		background: #202020;
+	
 		color: #fff;
 	}
 	code {

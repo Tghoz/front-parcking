@@ -6,11 +6,15 @@ import { MdAlternateEmail } from "react-icons/md";
 import { PiUserLight } from "react-icons/pi";
 
 import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Spinner } from "@nextui-org/react";
 
 import { PostData } from '../api/auth';
 
 export default function RegisterForm() {
  
+	const [error, setError] = useState(null);
+	const [loading, setLoading] = useState(false);
 	
 	const {
 		register,
@@ -22,10 +26,27 @@ export default function RegisterForm() {
 	  });
 
 
-	const onSubmit = (data) => {
-		const url = 'http://localhost:3000/api/auth/register';
-		PostData(url, data);
-		console.log(data);
+	const onSubmit = async (data) => {
+		setLoading(true);
+
+		try{
+			const url = 'http://localhost:3000/api/auth/login';
+			const resp = await PostData(url, data);
+
+			if (resp && resp.error) {
+				setError(resp.error)
+			}else{
+				window.location.href = '/dashboard/test';
+				console.log("resp ==>",resp)
+			}
+
+		}catch(error){
+			
+			setError(error)
+		}
+	 	finally {
+          setLoading(false); 
+        }
 		
     };
 
@@ -38,6 +59,9 @@ export default function RegisterForm() {
 	
 	return (    
       <form onSubmit={onSubmitHandler} className="sign-up-form">
+		{loading && <div className="absolute flex justify-center items-center h-[110%] w-[60%] backdrop-blur-md bg-white/30 z-10">
+		 	<Spinner color="secondary" size="lg"/>
+		 </div>}
 			  <h2 className="title">Sign up</h2>
 			  <div className="input-field">
                 <div className="justify-center items-center flex text-2xl text-gray-400">
@@ -75,6 +99,7 @@ export default function RegisterForm() {
 				})} type="password" placeholder="Password" />
 			    </div>
 				{errors.password && <p className="text-red-500">{errors.password.message}</p>}
+				{error && <p className="text-red-500">{error}</p>} 
 			  <input type="submit" className="btn" value="Sign up" />
 			  <p className="social-text">Or Sign up with social platforms</p>
 			  <div className="social-media">

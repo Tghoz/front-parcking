@@ -7,12 +7,17 @@ import { MdOutlinePassword } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 
+import {Spinner} from "@nextui-org/react";
+
 import { PostData } from '../api/auth';
+
+
+
 
 export default function LoginForm() {
 
 	const [error, setError] = useState(null);
-	
+	const [loading, setLoading] = useState(false);
 
 	
 	const {
@@ -25,13 +30,27 @@ export default function LoginForm() {
 
 
 	const onSubmit = async (data) => {
-		const url = 'http://localhost:3000/api/auth/login';
-		const resp = await PostData(url, data);
-		if (resp.error) {
-			setError(resp.error)
-		}else{
-			console.log("data else ==>",data)
+
+		setLoading(true);
+
+		try{
+			const url = 'http://localhost:3000/api/auth/login';
+			const resp = await PostData(url, data);
+
+			if (resp && resp.error) {
+				setError(resp.error)
+			}else{
+				window.location.href = '/dashboard/test';
+				console.log("resp ==>",resp)
+			}
+
+		}catch(error){
+			
+			setError(error)
 		}
+	 	finally {
+          setLoading(false); 
+        }
     };
 
 
@@ -43,7 +62,17 @@ export default function LoginForm() {
 
 
   return (
+
     <form onSubmit={onSubmitHandler} className="sign-in-form">
+		 
+		 
+		 {loading &&
+		 
+		 <div className="absolute flex justify-center items-center h-[100%] w-[60%] backdrop-blur-md bg-white/30 z-10">
+		 	<Spinner color="secondary" size="lg"/>
+		 </div>
+		 
+		 }
 		<h2 className="title">Sign in</h2>
 		<div className="input-field">
         <div className="justify-center items-center flex text-2xl text-gray-400"> 
